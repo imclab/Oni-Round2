@@ -3,32 +3,109 @@ using System.Collections;
 using Round2;
 using System.Collections.Generic;
 
-public class OBOA_Instantiator : MonoBehaviour 
+public interface IOnTriggerHit
 {
+    System.Action OnHit { get; }
+}
+
+public class OBOA_Instantiator : MonoBehaviour, IOnTriggerHit
+{
+    static Dictionary<int, List<OBOA_Instantiator>> m_doorlist = new Dictionary<int, List<OBOA_Instantiator>>();
     public OBOAObject m_obj;
     public Texture2D m_tex;
     public Texture2D m_tex2;
-    public string m_id;
+    public int m_id;
     public string flags;
     public UnityEngine.Quaternion __q;
+    public int door_id;
 
-    IEnumerator ICOR()
+    void OnTriggerHit(Collider other)
     {
-        yield return new WaitForSeconds(15);
-        m_tex = m_obj.Geometry.M3GA.Geometries.Link.M3GM.Texture.TXMP.UnityTexture;
-        //Debug.LogError(NewBehaviourScript.m_textureCache.ContainsKey(m_obj.Geometry.M3GA.Geometries.Link.M3GM.Texture.TXMP.id), this);
-        NewBehaviourScript.m_textureCache.TryGetValue(m_obj.Geometry.M3GA.Geometries.Link.M3GM.Texture.TXMP.id, out m_tex2);
+        Debug.LogError(other, other);
+    }
+
+    public void ImplementDoorClassCall(Round2.BINADOOR doorclass)
+    {
+    }
+
+    public System.Action m_onTriggerHit = () => { };
+
+    public static void InitializeFrom(Round2.BINADOOR door)
+    {
+        if (m_doorlist.ContainsKey(door._OSD.DoorId))
+        {
+            Round2.DOOR l_d = Round2.DOOR.m_doorClasses[door._OSD.Class];
+            
+            foreach (OBOA_Instantiator iinst in m_doorlist[door._OSD.DoorId])
+            {
+                SphereCollider sc = iinst.gameObject.AddComponent<SphereCollider>();
+                sc.radius = Mathf.Sqrt(door._OSD.SquaredActivationRadius) / 2f;
+                sc.isTrigger = true;
+                Animation l_a = iinst.GetComponentInChildren<Animation>();
+                l_a.AddClip(l_d.Animation.OBAN.Clip(true), "door");
+
+                iinst.m_onTriggerHit = () => 
+                {
+                    foreach (OBOA_Instantiator _iinst in m_doorlist[door._OSD.DoorId])
+                    {
+                        _iinst.GetComponentInChildren<Animation>().Play("door");
+                    }
+                };
+            }
+        }
+        else
+        {
+            Debug.LogError("INVALID DOOR ID:" + door._OSD.DoorId);
+        }
+    }
+
+    public static void DoorClassCall(Round2.BINADOOR doorclass)
+    {
+        if (m_doorlist.ContainsKey(doorclass._OSD.DoorId))
+        {
+            foreach (OBOA_Instantiator iinst in m_doorlist[doorclass._OSD.DoorId])
+            {
+                iinst.ImplementDoorClassCall(doorclass);
+            }
+        }
+        else
+        {
+            Debug.LogError("Improper doorId or ONOAid");
+        }
     }
 
     void MakeFromM3GM(M3GM data)
     {
         int[] indiсes = data.TriangleStrips.IDXA.DecodeForM3GM_1();
+        
+        if(this.flags.Contains("FaceCollision"))
+        {
+            List<int> indcs = new List<int>();
+            List<int> _3inds = new List<int>();
+
+            foreach(int _m in indiсes)
+            {
+                _3inds.Add(_m);
+
+                if(_3inds.Count > 2)
+                {
+                    _3inds.Reverse();
+                    indcs.AddRange(_3inds);
+                    _3inds.Clear();
+                }
+            }
+
+            indiсes = indcs.ToArray();
+        }
+
         UnityEngine.Vector3[] planeNormals = new List<Round2.Vector3>(data.Points.PNTA.Positions).ConvertAll<UnityEngine.Vector3>(u => u.Value).ToArray();
         UnityEngine.Vector3[] pts = new List<Round2.Vector3>(data.Points.PNTA.Positions).ConvertAll<UnityEngine.Vector3>(u => u.Value).ToArray();
         UnityEngine.Vector2[] uvs = new List<Round2.Vector2>(data.TextureCoordinates.TXCA.TexCoords).ConvertAll<UnityEngine.Vector2>(u => u.Value).ToArray();
         UnityEngine.Vector3[] normals = new List<Round2.Vector3>(data.VertexNormals.VCRA.Normals).ConvertAll<UnityEngine.Vector3>(u => u.Value).ToArray();
         GameObject l_ch = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        l_ch.renderer.material.shader = Shader.Find("TwoSidedDiffuse");
+        l_ch.AddComponent<Animation>();
+        Destroy(l_ch.collider);
+        ;
         l_ch.renderer.material.mainTexture = m_tex;
         l_ch.transform.parent = transform;
         l_ch.transform.localPosition = UnityEngine.Vector3.zero;
@@ -42,6 +119,7 @@ public class OBOA_Instantiator : MonoBehaviour
         m.RecalculateBounds();
         m.RecalculateNormals();
         l_ch.GetComponent<MeshFilter>().mesh = m;
+        l_ch.AddComponent<MeshCollider>().mesh = m;
 
         {
 
@@ -140,9 +218,19 @@ public class OBOA_Instantiator : MonoBehaviour
             flags = m_obj.Flags;
             //Debug.Log(m_obj.Geometry.M3GA.id);
             m_tex = m_obj.Geometry.M3GA.Geometries.Link.M3GM.Texture.TXMP.UnityTexture;
-            StartCoroutine(ICOR());
-            m_id = m_obj.ScriptId.ToString();
-            
+            m_id = m_obj.Geometry.M3GA.Geometries.Link.M3GM.TriangleStrips.IDXA.id;
+            door_id = m_obj.DoorId << 24 >> 24;
+
+            if (door_id >= 0)
+            {
+                if (!m_doorlist.ContainsKey(door_id))
+                {
+                    m_doorlist.Add(door_id, new List<OBOA_Instantiator>());
+                }
+
+                m_doorlist[door_id].Add(this);
+            }
+
             MakeFromM3GM(m_obj.Geometry.M3GA.Geometries.Link.M3GM);
         }
         else
@@ -150,4 +238,23 @@ public class OBOA_Instantiator : MonoBehaviour
             Destroy(gameObject);
         }
 	}
+
+    void OnTriggerEnter(Collider other)
+    {
+        foreach (MonoBehaviour mb in other.gameObject.GetComponents<MonoBehaviour>())
+        {
+            if (mb is ICHR)
+            {
+                (mb as ICHR).OnDoorInteract(this);
+            }
+        }
+    }
+
+    public System.Action OnHit
+    {
+        get 
+        {
+            return m_onTriggerHit; 
+        }
+    }
 }

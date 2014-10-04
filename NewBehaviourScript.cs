@@ -5,8 +5,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
+using Oni.Xml;
+using Oni.Metadata;
+using System.Xml.Serialization;
 
-public class NewBehaviourScript : MonoBehaviour 
+public interface ICHR
+{
+    void OnDoorInteract(OBOA_Instantiator door);
+}
+
+public class NewBehaviourScript : MonoBehaviour, ICHR
 {
     public MeshFilter mf;
     public SkinnedMeshRenderer sr;
@@ -169,7 +177,6 @@ public class NewBehaviourScript : MonoBehaviour
 
     void InstallAKEV(Oni.InstanceDescriptor AKEV )
     {
-        Debug.Log(m_objectONOAs.Count+"::: ONOA REGISTRY");
         GameObject go = m_levelRoot = new GameObject(AKEV.Name);
         Oni.Akira.PolygonMesh mesh = Oni.Akira.AkiraDatReader.Read(AKEV);
         Mesh floorCollider = new Mesh();
@@ -228,7 +235,7 @@ public class NewBehaviourScript : MonoBehaviour
         
         foreach (Oni.Akira.Polygon mp in mesh.Polygons)
         {
-            if ((mp.Flags & Oni.Akira.GunkFlags.DoorFrame) != 0 || (mp.Flags & Oni.Akira.GunkFlags.Furniture) != 0 || m_objectONOAs.ContainsKey(mp.ObjectId))
+            if ((mp.Flags & Oni.Akira.GunkFlags.DoorFrame) != 0 || (mp.Flags & Oni.Akira.GunkFlags.Furniture) != 0 || m_objectONOAs.ContainsKey(mp.ObjectId) /*i bet, i don't need onoas statics*/)
             {
                 continue;
             }
@@ -401,12 +408,6 @@ public class NewBehaviourScript : MonoBehaviour
                         mgo.AddComponent<MeshCollider>();
                         mc.mesh = me;
                         mc.isTrigger = noCollisions;
-                    }
-
-                    if (isDoor)
-                    {
-                        mgo.AddComponent<Door>();
-                        
                     }
                 }
             }
@@ -712,7 +713,7 @@ env_setanim 109 ForkLift09
             }
         });
         StartCoroutine(iStart());
-        
+        this.GetComponent<CharacterController>().detectCollisions = true;
     }
 
     [System.Serializable]
@@ -761,7 +762,7 @@ env_setanim 109 ForkLift09
         {
             get
             {
-                return (ObjectKind)(ObjectId >> 24 << 8 * 4);
+                return (ObjectKind)(ObjectId ^ RealObjectId << 8);
             }
         }
 
@@ -950,7 +951,7 @@ env_setanim 109 ForkLift09
         
     }
 
-    MemoryStream ODump(Oni.InstanceDescriptor des)
+    MemoryStream ODump(Oni.InstanceDescriptor des, bool discwrite = false)
     {
         MemoryStream ms = new MemoryStream();
         System.Xml.XmlWriter w = System.Xml.XmlWriter.Create(ms);
@@ -970,7 +971,10 @@ env_setanim 109 ForkLift09
             };
         Oni.Xml.GenericXmlWriter.Write(w, ides, des);
         w.Flush();
-        System.IO.File.WriteAllBytes("D:\\odump.xml", ms.GetBuffer());
+        if (discwrite)
+        {
+            System.IO.File.WriteAllBytes("D:\\odump.xml", ms.GetBuffer());
+        }
         //Debug.Log(System.Text.UTF8Encoding.UTF8.GetString(ms.GetBuffer()));
         return ms;
     }
@@ -1635,7 +1639,7 @@ env_setanim 109 ForkLift09
        
         */
             #endregion
-
+            
             Oni.InstanceFileManager fm = new Oni.InstanceFileManager();
             Oni.InstanceFile level0 = fm.OpenFile((Application.isEditor ? @"D:\OniCleanInstall\" : @"..\..\") + @"GameDataFolder\level0_Final.dat");
             Oni.InstanceFile level1 = fm.OpenFile((Application.isEditor ? @"D:\OniCleanInstall\" : @"..\..\") + @"GameDataFolder\level1_Final.dat");
@@ -1654,17 +1658,33 @@ env_setanim 109 ForkLift09
                 int couc = 0;
                 
                 //Debug.LogError(fm.OpenFile((Application.isEditor ? @"D:\OniCleanInstall\" : @"..\..\") + @"GameDataFolder\level0_Final.dat" + @"\BINACJBOTrigger.oni"));
+                //Debug.Log(fm.FindInstance("CJBODoor", level1));
+                MemoryStream ms = new MemoryStream();
+                System.Xml.XmlWriter xw = System.Xml.XmlWriter.Create(ms);
 
-                foreach (Oni.InstanceDescriptor desc in fm.FindInstance("BINACJBOTrigger", level1).GetNamedDescriptors())
+                /*
+                Oni.Xml.ObjcXmlExporter.Export(fm.FindInstance("BINACJBODOOR.oni", level1).Descriptors[0].OpenRead(), xw);
+                xw.Flush();
+                System.IO.File.WriteAllBytes("D:\\odump.xml", ms.GetBuffer());*/
+                
+
+                /*
+                foreach (Oni.InstanceDescriptor desc in fm.FindInstance("hjgasdhj", level1).Descriptors)
                 {
+                    //Debug.LogError(desc.Name + "<P|P>" + desc.Template.Tag);
                     switch (desc.Template.Tag)
-                    { 
+                    {
+                        
+                        
+
                         case Oni.TemplateTag.DOOR:
-                            Debug.Log(ODump(desc).Length);
+                            ODump(desc, true);
+                            //UseDOOR(desc);
                             Debug.LogError(desc.Name + "<?|?>" + desc.Template.Tag);
+                            
                             break;
                     }
-                }
+                }*/
 
                 foreach (Oni.InstanceDescriptor desc in level0.GetNamedDescriptors())
                 {
@@ -1675,9 +1695,13 @@ env_setanim 109 ForkLift09
                         yield return null;
                     }
 
+                    
                     switch (desc.Template.Tag)
                     {
-                        
+                        case Oni.TemplateTag.DOOR:
+                            UseDOOR(desc);
+                            //ODump(desc);
+                            break;
                         case Oni.TemplateTag.ONCC:
                             Debug.Log(desc.Name);
                             if (desc.Name == "konoko_generic")
@@ -1690,7 +1714,6 @@ env_setanim 109 ForkLift09
                 }
 
                 couc = 0;
- 
 
 
                 foreach (Oni.InstanceDescriptor desc in level1.Descriptors)
@@ -1715,10 +1738,6 @@ env_setanim 109 ForkLift09
                             m_M3GMREG.Add(desc.Index, me);
                             break;
 
-                        case Oni.TemplateTag.DOOR:
-                            ODump(desc);
-                            break;
-
                         case Oni.TemplateTag.OBOA:
                             UseOBOA(desc);
                             //ODump(desc);
@@ -1733,7 +1752,7 @@ env_setanim 109 ForkLift09
                        
                         case Oni.TemplateTag.OBDC:
                             
-                            Debug.Log("OBDC" + desc.Name + "|" + desc.Index);
+                            //Debug.Log("OBDC" + desc.Name + "|" + desc.Index);
                             break;
 
                         case Oni.TemplateTag.ONCC:
@@ -1744,10 +1763,20 @@ env_setanim 109 ForkLift09
                                 KON_CC = desc;
                             }
                             break;
-                        
+
+                        case Oni.TemplateTag.BINA:
+                            //Debug.LogError(desc.Name + "{}{}{");
+                           
+                            if (desc.Name.Contains("Door"))
+                            {
+                                InitializeDoors(desc);
+                            }
+
+                            break;
                         
                         case Oni.TemplateTag.ONLV:
                             level_01_ONLV = desc;
+                            //ODump(desc, true);
                             Debug.Log(level_01_ONLV.Name);
                             break;
                     }
@@ -2049,6 +2078,84 @@ env_setanim 109 ForkLift09
         }
     }
 
+    void InitializeDoors(Oni.InstanceDescriptor desc)
+    {
+        MemoryStream ms = ODumpBINA(desc);
+        XmlRootAttribute xRoot = new XmlRootAttribute();
+        xRoot.ElementName = "Objects";
+        xRoot.IsNullable = true;
+        Round2.BINADOOR[] l_doors = new System.Xml.Serialization.XmlSerializer(typeof(Round2.BINADOOR[]), xRoot).Deserialize(ms) as Round2.BINADOOR[];
+        Debug.Log(l_doors[0].Id);
+
+        foreach (Round2.BINADOOR l_door in l_doors)
+        {
+            OBOA_Instantiator.InitializeFrom(l_door);
+        }
+    }
+
+    private MemoryStream ODumpBINA(Oni.InstanceDescriptor desc, bool p = false)
+    {
+        MemoryStream l_ms = new MemoryStream();
+        System.Xml.XmlWriter l_xmlw = System.Xml.XmlWriter.Create(l_ms);
+        int num;
+        Oni.BinaryReader binaryReader = desc.OpenRead();
+        using (binaryReader)
+        {
+            binaryReader.ReadInt32();
+            num = binaryReader.ReadInt32();
+        }
+        Oni.BinaryReader rawReader = desc.GetRawReader(num);
+        using (rawReader)
+        {
+            Oni.Metadata.BinaryTag binaryTag = (Oni.Metadata.BinaryTag)rawReader.ReadInt32();
+            Oni.Metadata.BinaryTag binaryTag1 = binaryTag;
+            if (binaryTag1 > Oni.Metadata.BinaryTag.ONIE)
+            {
+                if (binaryTag1 == Oni.Metadata.BinaryTag.PAR3)
+                {
+                    ParticleXmlExporter.Export(desc.FullName.Substring(8), rawReader, l_xmlw);
+                }
+                else
+                {
+                    if (binaryTag1 == Oni.Metadata.BinaryTag.SABD)
+                    {
+                        Oni.Sound.SabdXmlExporter.Export(rawReader, l_xmlw);
+                    }
+                    else
+                    {
+                        if (binaryTag1 != BinaryTag.TMBD)
+                        {
+                            throw new System.NotSupportedException(string.Format("Unsupported BINA type '{0}'", Oni.Utils.TagToString((int)binaryTag)));
+                        }
+                        TmbdXmlExporter.Export(rawReader, l_xmlw);
+                    }
+                }
+            }
+            else
+            {
+                if (binaryTag1 == BinaryTag.OBJC)
+                {
+                    ObjcXmlExporter.Export(rawReader, l_xmlw);
+                }
+                else
+                {
+                    if (binaryTag1 != BinaryTag.ONIE)
+                    {
+                        throw new System.NotSupportedException(string.Format("Unsupported BINA type '{0}'", Oni.Utils.TagToString((int)binaryTag)));
+                    }
+                    OnieXmlExporter.Export(rawReader, l_xmlw);
+                }
+            }
+        }
+        l_xmlw.Flush();
+        if (p)
+        {
+            System.IO.File.WriteAllBytes("D:\\odump.xml", l_ms.GetBuffer());
+        }
+        l_ms.Seek(0, SeekOrigin.Begin);
+        return l_ms;
+    }
+
     static Dictionary<int, OBOAObject> m_IDCtoOBOA = new Dictionary<int, OBOAObject>();
     static Dictionary<int, Oni.Motoko.Geometry> m_M3GMREG = new Dictionary<int, Oni.Motoko.Geometry>();
 
@@ -2200,6 +2307,17 @@ env_setanim 109 ForkLift09
         return null;
     }
 
+    void UseDOOR(Oni.InstanceDescriptor desc)
+    {
+        MemoryStream ms = ODump(desc, true);
+        ms.Seek(0, SeekOrigin.Begin);
+        //OBOA o = new System.Xml.Serialization.XmlSerializer(typeof(OBOA)).Deserialize(ms) as OBOA;
+
+        Round2.DOOR l_DOOR = new System.Xml.Serialization.XmlSerializer(typeof(Round2.DOOR)).Deserialize(ms) as Round2.DOOR;
+        Debug.Log("|::|>>" +l_DOOR.id + ":doorname | " + desc.Name);
+        Round2.DOOR.m_doorClasses.Add(desc.Name, l_DOOR);
+    }
+
     int[] UseIDXA(XElement idxa)
     {
         return null;
@@ -2222,11 +2340,12 @@ env_setanim 109 ForkLift09
         foreach (ONOAElement el in (new System.Xml.Serialization.XmlSerializer(typeof(ONOA)).Deserialize(ms) as ONOA).Elements)
         {
             el._RealObjectId = el.RealObjectId;
+            Debug.LogWarning("=====" + el.RealObjectId);
 
             if (el.RealObjectId != -1 && !m_objectONOAs.ContainsKey(el.RealObjectId))
             {
                 m_objectONOAs.Add(el.RealObjectId, el);
-                onoalist.Add(el);
+                //onoalist.Add(el);
             }
         }
         //throw new System.NotImplementedException();
@@ -2264,4 +2383,20 @@ env_setanim 109 ForkLift09
     {
 	
 	}
+
+    void OnTriggerHit(Collider other)
+    {
+        Debug.LogError("trig", other);
+        MonoBehaviour l_mb = other.GetComponent<MonoBehaviour>();
+
+        if (l_mb is IOnTriggerHit)
+        {
+            (l_mb as IOnTriggerHit).OnHit();
+        }
+    }
+
+    public void OnDoorInteract(OBOA_Instantiator door)
+    {
+        door.m_onTriggerHit();
+    }
 }

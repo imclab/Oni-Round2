@@ -34,8 +34,8 @@ namespace Round2
         public _OBAN Animation;
         public ENVP Particle;
         public string Flags;
-        public int DoorGundId;
-        public int DoorID;
+        public int DoorGunkId;
+        public int DoorId;
         [XmlIgnore]
         private string m_pht;
 

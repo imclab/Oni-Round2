@@ -1385,7 +1385,8 @@ public class GUIANIMCONTROL : MonoBehaviour
         if (NewBehaviourScript.EndFlag)
         {
             CollisionFlags flags = GetComponentInChildren<CharacterController>().Move(transform.rotation * (m_motionVector + Physics.gravity + m_rememberedSpeed + new Vector3(0, m_jumpStart != 0 ? Mathf.Sqrt(Mathf.Abs(m_jumpVal - (Time.time - m_jumpStart))) * Mathf.Sign((m_jumpVal - (Time.time - m_jumpStart))) * (m_travelDist * (Input.GetKey(KeyCode.Space) ? 1.3f : 1)) : 0, 0)) * Time.deltaTime);
-
+            //rigidbody.MovePosition(Vector3.up);
+            //rigidbody.MovePosition(Vector3.down);
             {
                 if(m_lockCursor)
                 {

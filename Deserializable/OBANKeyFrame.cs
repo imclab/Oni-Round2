@@ -10,7 +10,6 @@ namespace Round2
         public string Rotation;
 
         [XmlIgnore]
-
         public UnityEngine.Quaternion _Rotation
         {
             get
@@ -35,5 +34,14 @@ namespace Round2
 
         public Vector3 Translation;
         public int Time;
+
+        [XmlIgnore]
+        public float RealTime
+        {
+            get
+            {
+                return Time * (1 / 60f);
+            }
+        }
     }
 }
