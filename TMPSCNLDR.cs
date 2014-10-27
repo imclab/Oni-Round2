@@ -10,6 +10,19 @@ public class TMPSCNLDR : MonoBehaviour
         return (T)new System.Xml.Serialization.XmlSerializer(typeof(T)).Deserialize(ms);
     }
 
+    [Serializable]
+    public struct TMP_TX_ENTRY
+    {
+        public string name;
+        public Texture2D tex;
+    }
+
+    public List<string> m_texNames = new List<string>();
+    public static TMPSCNLDR m_singleton;
+    public Texture2D m_targeted_query_texture;
+
+    public List<TMP_TX_ENTRY> m_txs = new List<TMP_TX_ENTRY>();
+
     static void UseONLV(Oni.InstanceDescriptor ides)
     {
         Round2.ONLV l_onlv;
@@ -37,6 +50,7 @@ public class TMPSCNLDR : MonoBehaviour
 
     internal Texture2D ObtainTXFrom(Oni.InstanceDescriptor txca)
     {
+        //Debug.Log(txca.Index);
         {
             try
             {
@@ -60,7 +74,7 @@ public class TMPSCNLDR : MonoBehaviour
                 l_t.name = txca.Name;
                 l_t.SetPixels32(l_colors.ToArray());
                 l_t.Apply(true);
-                Debug.Log(l_t, l_t);
+                //Debug.Log(l_t +"|"+txca.Index, l_t);
                 return l_t;
             }
             catch (System.Exception ee)
@@ -74,6 +88,10 @@ public class TMPSCNLDR : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
+        //Debug.Log((new System.Object[] { 113, 123, "asd" }).ArrayAsSml());
+        //Debug.Log((new System.Object[] { 113, 123, "asd", Round2.GunkFlags.Danger }).ArrayAsSml().SmlToArray());
+        //return;
+        m_singleton = this;
         Oni.InstanceFileManager fm = new Oni.InstanceFileManager();
         Oni.InstanceFile level0 = fm.OpenFile((Application.isEditor ? @"D:\OniCleanInstall\" : @"..\..\") + @"GameDataFolder\level0_Final.dat");
         Oni.InstanceFile level1 = fm.OpenFile((Application.isEditor ? @"D:\OniCleanInstall\" : @"..\..\") + @"GameDataFolder\level1_Final.dat");
@@ -88,12 +106,14 @@ public class TMPSCNLDR : MonoBehaviour
 
         List<int> l_txIndArray = new List<int>(Texture2DQuery.TexturesToLoad);
 
+
         foreach (Oni.InstanceDescriptor desc in level1.Descriptors)
         {
             switch (desc.Template.Tag)
             {
                 case Oni.TemplateTag.TXMP:
                     {
+                        //Debug.Log("idxt:" + desc.Index);
                         if (l_txIndArray.Contains(desc.Index))
                         {
                             Texture2D l_tex = null;
@@ -101,13 +121,12 @@ public class TMPSCNLDR : MonoBehaviour
                             if ((l_tex = ObtainTXFrom(desc)) != null)
                             {
                                 Texture2DQuery.Loaded(desc.Index, l_tex);
-                                Debug.Log(l_tex, l_tex);
+                                //Debug.Log(l_tex, l_tex);
                             }
                         }
                     }
                     break;
             }
-            
         }
 
         /*

@@ -14,20 +14,36 @@ namespace Round2
     /// </summary>
     public class TXMP
     {
+        int m_id;
+
         [XmlAttribute("id")]
-        public int id;
+        public int id
+        {
+            get 
+            {
+                return m_id;
+            }
+
+            set
+            {
+                m_id = value;
+                Texture2DQuery.TexturePend(m_id, u => m_tex = u);
+            }
+        }
 
         public string Flags;
         public int Width;
         public int Height;
         public string Format;
 
+        UnityEngine.Texture2D m_tex = null;
+
         [XmlIgnore]
         public Texture2D UnityTexture
         {
             get
             {
-                return NewBehaviourScript.m_textureCache.ContainsKey(id) ? NewBehaviourScript.m_textureCache[id] : null;
+                return NewBehaviourScript.m_textureCache.ContainsKey(id) ? NewBehaviourScript.m_textureCache[id] : m_tex;
             }
         }
 

@@ -994,6 +994,7 @@ env_setanim 109 ForkLift09
             try
             {
                 Oni.Motoko.Texture l_rtex = Oni.Motoko.TextureDatReader.Read(txca);
+                Debug.Log(txca.Index);
                 Texture2D l_t = new Texture2D(l_rtex.Width, l_rtex.Height, TextureFormat.RGBA32, true);
                 Oni.Imaging.Surface l_s = l_rtex.Surfaces[0].Convert(Oni.Imaging.SurfaceFormat.RGBA);
                 List<byte> l_colorBytes = new List<byte>();

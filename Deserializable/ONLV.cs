@@ -51,13 +51,10 @@ namespace Round2
 
         public void InitEnv()
         {
-            //Debug.Log((GunkFlags)((GunkFlags.Ghost | GunkFlags.Danger | GunkFlags.DoorFrame) ^ (~(GunkFlags.Danger | GunkFlags.DoorFrame))));
-            //return;
-            //Debug.Log(Environment.AKEV.Quads.AGQG.Quads.Length + "|" + this.Environment.AKEV.QuadTextures.AGQR.Elements.Length);
-            //foreach (AGQGQuad l_quad in Environment.AKEV.Quads.AGQG.Quads)
             for (int index = 0; index < Environment.AKEV.Quads.AGQG.Quads.Length; index++)
             {
                 int txi = this.Environment.AKEV.QuadTextures.AGQR.Elements[index].Texture.Value;
+                Links.TXMPLNK l_lnk = this.Environment.AKEV.Textures.TXMA.Textures[txi];
                 AGQGQuad l_quad = Environment.AKEV.Quads.AGQG.Quads[index];
 
                 if ((l_quad.Flags & GunkFlags.Ghost) != 0 || (l_quad.Flags & GunkFlags.StairsUp) != 0 || (l_quad.Flags & GunkFlags.StairsDown) != 0 || (l_quad.Flags & GunkFlags.DoorFrame) != 0 || (l_quad.Flags & GunkFlags.Furniture) != 0)
@@ -65,8 +62,13 @@ namespace Round2
                     continue;
                 }
 
-                string l_hash = l_quad.Flags.ToString() + "|" + l_quad.ObjectId + " < tex : [" + txi + " ] >";
-
+                string l_hash = new object[] 
+                { 
+                    l_quad.Flags, 
+                    l_quad.ObjectId,  
+                    (l_lnk != null && l_lnk.TXMP!= null ? l_lnk.TXMP.id : -1) 
+                }.ArrayAsSml();
+                
                 EmitVertex
                 (
                     l_hash,
@@ -122,8 +124,15 @@ namespace Round2
             {
                 GameObject g = new GameObject(l_objname);
                 MeshFilter mf = g.AddComponent<MeshFilter>();
+                object[] l_arr = l_objname.SmlToArray();
+                l_counter = l_arr == null || l_arr[2] == null ? -1 : (int)l_arr[2];
                 Material l_objmat = g.AddComponent<MeshRenderer>().material = new Material(Shader.Find("Diffuse"));
-                Texture2DQuery.TexturePend(this.Environment.AKEV.QuadTextures.AGQR.Elements[l_counter++].Texture.Value, tex => l_objmat.mainTexture = tex);
+
+                if (l_counter >= 0)
+                {
+                    Texture2DQuery.TexturePend(l_counter, tex => l_objmat.mainTexture = tex);
+                }
+                
                 Mesh m = new Mesh();
                 List<UnityEngine.Vector3> vrts = new List<UnityEngine.Vector3>();
                 List<UnityEngine.Vector2> uvs = new List<UnityEngine.Vector2>();
@@ -142,9 +151,6 @@ namespace Round2
                 m.RecalculateBounds();
                 m.RecalculateNormals();
                 mf.mesh = m;
-
-
-                //break;
             }
         }
     }
