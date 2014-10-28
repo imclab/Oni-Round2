@@ -78,7 +78,7 @@ public class OBOA_Instantiator : MonoBehaviour, IOnTriggerHit
     {
         int[] indiсes = data.TriangleStrips.IDXA.DecodeForM3GM_1();
         
-        if(this.flags.Contains("FaceCollision"))
+        if(!this.flags.Contains("FaceCollision"))
         {
             List<int> indcs = new List<int>();
             List<int> _3inds = new List<int>();
@@ -99,7 +99,7 @@ public class OBOA_Instantiator : MonoBehaviour, IOnTriggerHit
         }
 
         UnityEngine.Vector3[] planeNormals = new List<Round2.Vector3>(data.Points.PNTA.Positions).ConvertAll<UnityEngine.Vector3>(u => u.Value).ToArray();
-        UnityEngine.Vector3[] pts = new List<Round2.Vector3>(data.Points.PNTA.Positions).ConvertAll<UnityEngine.Vector3>(u => u.Value).ToArray();
+        UnityEngine.Vector3[] pts = new List<Round2.Vector3>(data.Points.PNTA.Positions).ConvertAll<UnityEngine.Vector3>(u => new UnityEngine.Vector3(-u.Value.x, u.Value.y, u.Value.z)).ToArray();
         UnityEngine.Vector2[] uvs = new List<Round2.Vector2>(data.TextureCoordinates.TXCA.TexCoords).ConvertAll<UnityEngine.Vector2>(u => u.Value).ToArray();
         UnityEngine.Vector3[] normals = new List<Round2.Vector3>(data.VertexNormals.VCRA.Normals).ConvertAll<UnityEngine.Vector3>(u => u.Value).ToArray();
         GameObject l_ch = GameObject.CreatePrimitive(PrimitiveType.Plane);
@@ -151,9 +151,10 @@ public class OBOA_Instantiator : MonoBehaviour, IOnTriggerHit
             //l_trsm.Transpose();
             l_trsm.Decompose(out scale, out rot, out trans);
             transform.localScale = new UnityEngine.Vector3(scale.X, scale.Y, scale.Z);
-            transform.position = new UnityEngine.Vector3(trans.X, trans.Y, trans.Z);
-            transform.rotation = new UnityEngine.Quaternion(rot.X, rot.Y, rot.Z, rot.W);
-
+            transform.position = new UnityEngine.Vector3(-trans.X, trans.Y, trans.Z);
+            UnityEngine.Vector3 l_eulerz = new UnityEngine.Quaternion(rot.X, rot.Y, rot.Z, rot.W).eulerAngles;
+            transform.rotation = UnityEngine.Quaternion.Euler(l_eulerz.x, -l_eulerz.y, -l_eulerz.z);
+            
         }
         if (m_obj.Animation.OBAN != null && m_obj.Animation.OBAN.KeyFrames != null)
         {
@@ -206,8 +207,9 @@ public class OBOA_Instantiator : MonoBehaviour, IOnTriggerHit
             //l_trsm.Transpose();
             l_trsm.Decompose(out scale, out rot, out trans);
             transform.localScale = new UnityEngine.Vector3(scale.X, scale.Y, scale.Z);
-            transform.position = new UnityEngine.Vector3(trans.X, trans.Y, trans.Z);
-            transform.rotation = __q = new UnityEngine.Quaternion(rot.X, rot.Y, rot.Z, rot.W);
+            transform.position = new UnityEngine.Vector3(-trans.X, trans.Y, trans.Z);
+            UnityEngine.Vector3 l_eulz = new UnityEngine.Quaternion(rot.X, rot.Y, rot.Z, rot.W).eulerAngles;
+            transform.rotation = __q = UnityEngine.Quaternion.Euler(l_eulz.x, -l_eulz.y, -l_eulz.z);
         }
     }
 
@@ -217,8 +219,8 @@ public class OBOA_Instantiator : MonoBehaviour, IOnTriggerHit
         {
             flags = m_obj.Flags;
             //Debug.Log(m_obj.Geometry.M3GA.id);
-            m_tex = m_obj.Geometry.M3GA.Geometries.Link.M3GM.Texture.TXMP.UnityTexture;
-            m_id = m_obj.Geometry.M3GA.Geometries.Link.M3GM.TriangleStrips.IDXA.id;
+            m_tex = m_obj.Geometry.M3GA.Geometries[0].M3GM.Texture.TXMP.UnityTexture;
+            m_id = m_obj.Geometry.M3GA.Geometries[0].M3GM.TriangleStrips.IDXA.id;
             door_id = m_obj.DoorId << 24 >> 24;
 
             if (door_id >= 0)
@@ -231,7 +233,7 @@ public class OBOA_Instantiator : MonoBehaviour, IOnTriggerHit
                 m_doorlist[door_id].Add(this);
             }
 
-            MakeFromM3GM(m_obj.Geometry.M3GA.Geometries.Link.M3GM);
+            MakeFromM3GM(m_obj.Geometry.M3GA.Geometries[0].M3GM);
         }
         else
         {

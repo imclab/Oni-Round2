@@ -20,6 +20,7 @@ public class TMPSCNLDR : MonoBehaviour
     public List<string> m_texNames = new List<string>();
     public static TMPSCNLDR m_singleton;
     public Texture2D m_targeted_query_texture;
+    public List<Mesh> m_meshLst = new List<Mesh>();
 
     public List<TMP_TX_ENTRY> m_txs = new List<TMP_TX_ENTRY>();
 
@@ -128,6 +129,8 @@ public class TMPSCNLDR : MonoBehaviour
                     break;
             }
         }
+
+        Round2.AISACharacter.GetByName("Konoko")[0].TMP_InstallNewCharacter();
 
         /*
         foreach (int id in Texture2DQuery.TexturesToLoad)

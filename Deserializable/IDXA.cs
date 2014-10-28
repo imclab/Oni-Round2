@@ -64,8 +64,6 @@ namespace Round2
                 }
             }
 
-
-
             return l_idxlst.ToArray();
         }
     }

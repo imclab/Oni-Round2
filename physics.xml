@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Oni>
+    <Physics>
+        <Object>
+            <Geometry>M3GMDishBase.oni</Geometry>
+            <Animation>OBANDishBase.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>201</ScriptId>
+            <Position>-197.729141 128.46283 -2501.46387</Position>
+            <Rotation>0.7071067 -1.545431E-08 1.545431E-08 0.7071068</Rotation>
+            <Scale>2.109375</Scale>
+            <Name>object_DishBase</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMDishDish.oni</Geometry>
+            <Animation>OBANDishDish.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>202</ScriptId>
+            <Position>-174.759079 234.75676 -2502.39868</Position>
+            <Rotation>2.3839883E-08 -2.7793294E-15 5.89728266E-08 1</Rotation>
+            <Scale>2.10937476</Scale>
+            <Name>object_DishDish</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMDishFins.oni</Geometry>
+            <Animation>OBANDishFins.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>203</ScriptId>
+            <Position>-182.052979 2.24633527 -2501.25</Position>
+            <Rotation>0.5 0.5 0.5 0.5</Rotation>
+            <Scale>1</Scale>
+            <Name>object_DishFins</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMDishFloor01.oni</Geometry>
+            <Animation>OBANDishFloor01.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>204</ScriptId>
+            <Position>-183 99.59154 -2501.25</Position>
+            <Rotation>0.7071067 -1.545431E-08 1.545431E-08 0.7071068</Rotation>
+            <Scale>1</Scale>
+            <Name>object_DishFloor01</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMDishFloor02.oni</Geometry>
+            <Animation>OBANDishFloor02.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>205</ScriptId>
+            <Position>-183 99.59154 -2501.25</Position>
+            <Rotation>0.7071067 -1.545431E-08 1.545431E-08 0.7071068</Rotation>
+            <Scale>1</Scale>
+            <Name>object_DishFloor02</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMDishPipe.oni</Geometry>
+            <Animation>OBANDishPipe.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>206</ScriptId>
+            <Position>-179.410233 -355.244324 -2501.81665</Position>
+            <Rotation>0.7071067 -1.545431E-08 1.545431E-08 0.7071068</Rotation>
+            <Scale>1</Scale>
+            <Name>object_DishPipe</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMDishPipeBase.oni</Geometry>
+            <Animation>OBANDishPipeBase.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>207</ScriptId>
+            <Position>-179.410217 51.08432 -2501.81665</Position>
+            <Rotation>0.7071067 -1.545431E-08 1.545431E-08 0.7071068</Rotation>
+            <Scale>1</Scale>
+            <Name>object_DishPipeBase</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMDishRim.oni</Geometry>
+            <Animation>OBANDishRim.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>208</ScriptId>
+            <Position>-174.759155 259.556976 -2502.39868</Position>
+            <Rotation>2.431311E-08 0.7071067 4.85503442E-08 0.7071068</Rotation>
+            <Scale>4.13437366</Scale>
+            <Name>object_DishRim</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMDishSupport01.oni</Geometry>
+            <Animation>OBANDishSupport01.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>209</ScriptId>
+            <Position>-218.6202 200.015884 -2501.61621</Position>
+            <Rotation>5.36422036E-08 8.47796E-09 9.31020452E-08 1</Rotation>
+            <Scale>2.109375</Scale>
+            <Name>object_DishSupport01</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMheli_body09.oni</Geometry>
+            <Animation>OBANheli_body09.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>904</ScriptId>
+            <Position>-152.498734 1325.6217 -3166.21045</Position>
+            <Rotation>-0.07206059 0.656310439 -0.0631954446 0.7483784</Rotation>
+            <Scale>1</Scale>
+            <Name>object_heli_body09</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMheli_canopy09.oni</Geometry>
+            <Animation>OBANheli_canopy09.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>905</ScriptId>
+            <Position>-224.308853 1310.34741 -3156.75659</Position>
+            <Rotation>-0.07206059 0.656310439 -0.0631954446 0.7483784</Rotation>
+            <Scale>1</Scale>
+            <Name>object_heli_canopy09</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMheli_doors_lt09.oni</Geometry>
+            <Animation>OBANheli_doors_lt09.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>902</ScriptId>
+            <Position>-178.920532 1326.32483 -3128.884</Position>
+            <Rotation>-0.5148084 -0.413410664 0.6651308 -0.348804981</Rotation>
+            <Scale>0.99999994</Scale>
+            <Name>object_heli_doors_lt09</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMheli_doors_rt09.oni</Geometry>
+            <Animation>OBANheli_doors_rt09.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>901</ScriptId>
+            <Position>-184.182114 1313.72375 -3187.61523</Position>
+            <Rotation>-0.07206059 0.656310439 -0.0631954446 0.7483784</Rotation>
+            <Scale>1</Scale>
+            <Name>object_heli_doors_rt09</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMheli_interior09.oni</Geometry>
+            <Animation>OBANheli_interior09.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>906</ScriptId>
+            <Position>-184.349075 1312.983 -3162.01733</Position>
+            <Rotation>0.478228867 0.508767545 0.4193956 0.580137968</Rotation>
+            <Scale>1</Scale>
+            <Name>object_heli_interior09</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMheli_rotorblades09.oni</Geometry>
+            <Animation>OBANheli_rotorblades09.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>903</ScriptId>
+            <Position>-189.403687 1340.59216 -3161.35181</Position>
+            <Rotation>-0.07206057 0.656310439 -0.06319542 0.7483784</Rotation>
+            <Scale>3.69</Scale>
+            <Name>object_heli_rotorblades09</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMtruckback.oni</Geometry>
+            <Animation>OBANtruckback.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>51</ScriptId>
+            <Position>-99.42459 -39.3827934 -529.0878</Position>
+            <Rotation>1.84534734E-08 0.75183934 0.659346342 -1.64319722E-08</Rotation>
+            <Scale>0.39145267</Scale>
+            <Name>object_truckback</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMtruckcab.oni</Geometry>
+            <Animation>OBANtruckcab.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>52</ScriptId>
+            <Position>-98.9233 -45.36884 -569.2546</Position>
+            <Rotation>0.7518394 -1.84534716E-08 1.64319722E-08 0.6593463</Rotation>
+            <Scale>1</Scale>
+            <Name>object_truckcab</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMtruckdoor.oni</Geometry>
+            <Animation>OBANtruckdoor.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>53</ScriptId>
+            <Position>-87.0136261 -49.6344757 -586.0686</Position>
+            <Rotation>0.0462465137 0.7055929 -0.0462465137 0.7055928</Rotation>
+            <Scale>1.00000012</Scale>
+            <Name>object_truckdoor</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMtruckdoor2.oni</Geometry>
+            <Animation>OBANtruckdoor2.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>54</ScriptId>
+            <Position>-110.787422 -49.3128 -585.4274</Position>
+            <Rotation>0.7071067 -1.545431E-08 1.545431E-08 0.7071068</Rotation>
+            <Scale>1</Scale>
+            <Name>object_truckdoor2</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMtruckwheel03.oni</Geometry>
+            <Animation>OBANtruckwheel03.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>55</ScriptId>
+            <Position>-98.89988 -59.41953 -560.3894</Position>
+            <Rotation>0.6983104 -0.11118985 -0.69830966 -0.111189544</Rotation>
+            <Scale>0.9999999</Scale>
+            <Name>object_truckwheel03</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMtruckwheel04.oni</Geometry>
+            <Animation>OBANtruckwheel04.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>56</ScriptId>
+            <Position>-98.89988 -57.71872 -547.4703</Position>
+            <Rotation>0.665055037 0.240212709 -0.66505456 0.2402125</Rotation>
+            <Scale>0.9999999</Scale>
+            <Name>object_truckwheel04</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMtruckwheel05.oni</Geometry>
+            <Animation>OBANtruckwheel05.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>57</ScriptId>
+            <Position>-98.89988 -61.6167564 -577.0791</Position>
+            <Rotation>0.670631647 -0.224173337 -0.670630932 -0.224173158</Rotation>
+            <Scale>0.999999642</Scale>
+            <Name>object_truckwheel05</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMtruckwheel06.oni</Geometry>
+            <Animation>OBANtruckwheel06.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>58</ScriptId>
+            <Position>-98.89987 -51.6865768 -501.651184</Position>
+            <Rotation>0.7063487 -0.03274044 -0.706348062 -0.03274039</Rotation>
+            <Scale>0.9999998</Scale>
+            <Name>object_truckwheel06</Name>
+        </Object>
+        <Object>
+            <Geometry>M3GMtruckwheel07.oni</Geometry>
+            <Animation>OBANtruckwheel07.oni</Animation>
+            <Physics>Animated</Physics>
+            <ScriptId>59</ScriptId>
+            <Position>-98.89987 -53.38739 -514.5703</Position>
+            <Rotation>0.68318516 -0.182369515 -0.6831844 -0.182369187</Rotation>
+            <Scale>1.00000012</Scale>
+            <Name>object_truckwheel07</Name>
+        </Object>
+    </Physics>
+</Oni>

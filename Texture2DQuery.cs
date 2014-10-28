@@ -4,16 +4,24 @@ using System.Collections.Generic;
 
 public static class Texture2DQuery
 {
+    public static Dictionary<int, Texture2D> m_idToTex = new Dictionary<int, Texture2D>();
     public static Dictionary<int, List<System.Action<Texture2D>>> m_queries = new Dictionary<int, List<System.Action<Texture2D>>>();
 
     public static void TexturePend(int texId, System.Action<Texture2D> ask)
     {
-        if (!m_queries.ContainsKey(texId))
+        if(m_idToTex.ContainsKey(texId))
         {
-            m_queries.Add(texId, new List<System.Action<Texture2D>>());
+            ask(m_idToTex[texId]);
         }
+        else
+        {
+            if (!m_queries.ContainsKey(texId))
+            {
+                m_queries.Add(texId, new List<System.Action<Texture2D>>());
+            }
 
-        m_queries[texId].Add(ask);
+            m_queries[texId].Add(ask);
+        }
     }
 
     public static IEnumerable<int> TexturesToLoad
@@ -26,11 +34,7 @@ public static class Texture2DQuery
 
     public static void Loaded(int id, Texture2D tex)
     {
-        if (id == 381)
-        {
-            Debug.Log("target catch");
-            TMPSCNLDR.m_singleton.m_targeted_query_texture = tex;
-        }
+        m_idToTex.Add(id, tex);
 
         if (m_queries.ContainsKey(id))
         {

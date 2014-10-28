@@ -60,9 +60,7 @@ namespace Round2
 
             set
             {
-                Debug.Log("QUADS INIT");
                 m_quads = value;
-                
             }
         }
 

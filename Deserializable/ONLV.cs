@@ -28,6 +28,19 @@ namespace Round2
         }
 
         public _AKEV Environment;
+        private _AISA m_characters;
+
+        public _AISA Characters
+        {
+            get 
+            {
+                return m_characters;
+            }
+            set
+            {
+                m_characters = value;
+            }
+        }
 
         Dictionary<string, List<VRTX>> m_objectsTrs = new Dictionary<string, List<VRTX>>();
 
@@ -38,7 +51,7 @@ namespace Round2
                 m_objectsTrs.Add(objhash, new List<VRTX>());
             }
 
-            m_objectsTrs[objhash].Add(new VRTX() { origIDX = originalIdx.Value, pos = pos.Value, uv = uv.Value, realIDX = m_objectsTrs[objhash].Count });
+            m_objectsTrs[objhash].Add(new VRTX() { origIDX = originalIdx.Value, pos = new UnityEngine.Vector3(-pos.Value.x, pos.Value.y, pos.Value.z), uv = uv.Value, realIDX = m_objectsTrs[objhash].Count });
         }
 
         struct VRTX
@@ -72,9 +85,9 @@ namespace Round2
                 EmitVertex
                 (
                     l_hash,
-                    this.Environment.AKEV.Points.PNTA.Positions[l_quad.Points[0].Value],
-                    this.Environment.AKEV.TextureCoordinates.TXCA.TexCoords[l_quad.TextureCoordinates[0].Value],
-                    l_quad.Points[0]
+                    this.Environment.AKEV.Points.PNTA.Positions[l_quad.Points[2].Value],
+                    this.Environment.AKEV.TextureCoordinates.TXCA.TexCoords[l_quad.TextureCoordinates[2].Value],
+                    l_quad.Points[2]
                 );
 
                 EmitVertex
@@ -88,6 +101,22 @@ namespace Round2
                 EmitVertex
                 (
                     l_hash,
+                    this.Environment.AKEV.Points.PNTA.Positions[l_quad.Points[0].Value],
+                    this.Environment.AKEV.TextureCoordinates.TXCA.TexCoords[l_quad.TextureCoordinates[0].Value],
+                    l_quad.Points[0]
+                );
+
+                EmitVertex
+                (
+                    l_hash,
+                    this.Environment.AKEV.Points.PNTA.Positions[l_quad.Points[3].Value],
+                    this.Environment.AKEV.TextureCoordinates.TXCA.TexCoords[l_quad.TextureCoordinates[3].Value],
+                    l_quad.Points[3]
+                );
+
+                EmitVertex
+                (
+                    l_hash,
                     this.Environment.AKEV.Points.PNTA.Positions[l_quad.Points[2].Value],
                     this.Environment.AKEV.TextureCoordinates.TXCA.TexCoords[l_quad.TextureCoordinates[2].Value],
                     l_quad.Points[2]
@@ -99,22 +128,6 @@ namespace Round2
                     this.Environment.AKEV.Points.PNTA.Positions[l_quad.Points[0].Value],
                     this.Environment.AKEV.TextureCoordinates.TXCA.TexCoords[l_quad.TextureCoordinates[0].Value],
                     l_quad.Points[0]
-                );
-
-                EmitVertex
-                (
-                    l_hash,
-                    this.Environment.AKEV.Points.PNTA.Positions[l_quad.Points[2].Value],
-                    this.Environment.AKEV.TextureCoordinates.TXCA.TexCoords[l_quad.TextureCoordinates[2].Value],
-                    l_quad.Points[2]
-                );
-
-                EmitVertex
-                (
-                    l_hash,
-                    this.Environment.AKEV.Points.PNTA.Positions[l_quad.Points[3].Value],
-                    this.Environment.AKEV.TextureCoordinates.TXCA.TexCoords[l_quad.TextureCoordinates[3].Value],
-                    l_quad.Points[3]
                 );
             }
 

@@ -21,7 +21,7 @@ namespace Round2
             set;
         }
 
-        public Links.M3GM._Link Geometries;
+        public Links.M3GMLNK[] Geometries;
     }
 
     
